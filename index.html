@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Journey AI | ذكاء رحلة العميل</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #1a2a6c; --secondary-color: #f39c12; --dark-blue: #0f172a; }
+        body { background-color: #f8fafc; font-family: 'Cairo', sans-serif; color: #334155; }
+        .hero-header { 
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-color) 100%); 
+            color: white; padding: 60px 0; border-bottom: 6px solid var(--secondary-color);
+        }
+        .card { border: none; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .card-header { background-color: white; border-bottom: 1px solid #e2e8f0; font-weight: bold; padding: 1.2rem; }
+        .img-viz { width: 100%; border-radius: 8px; transition: transform 0.3s; cursor: pointer; background: #fff; padding: 10px; }
+        .img-viz:hover { transform: scale(1.02); }
+        .status-badge { background: var(--secondary-color); color: white; padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; }
+        code { color: #e11d48; font-weight: bold; background: #fff1f2; padding: 2px 6px; border-radius: 4px; }
+        .recommendation-card { border-right: 5px solid var(--secondary-color) !important; transition: 0.3s; }
+        .recommendation-card:hover { background-color: #fffbeb; }
+    </style>
+</head>
+<body>
+
+<header class="hero-header text-center">
+    <div class="container">
+        <span class="status-badge mb-3">AI Strategic Project 2025</span>
+        <h1 class="display-4 fw-bold">نظام ذكاء رحلة العميل 🚀</h1>
+        <p class="lead opacity-75">تحليل المسارات البيعية وتوقع الإجراء القادم (Next Best Action)</p>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">🎯 محرك التوصيات اللحظي (NBA)</div>
+                <div class="card-body">
+                    <p class="text-muted small">قم بإدخال بيانات العميل لتطبيق خوارزمية الأوزان الديناميكية:</p>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">الدولة</label>
+                            <select class="form-select" id="inputCountry">
+                                <option value="US">United States (US)</option>
+                                <option value="Germany">Germany</option>
+                                <option value="France">France</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">نوع الحل</label>
+                            <select class="form-select" id="inputSolution">
+                                <option value="MRS">MRS Solution</option>
+                                <option value="ERP">ERP System</option>
+                                <option value="Cloud">Cloud Services</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">آخر إجراء تم تنفيذه</label>
+                            <select class="form-select" id="lastAction">
+                                <option value="None">لا يوجد</option>
+                                <option value="Email">Email</option>
+                                <option value="Call">Call</option>
+                                <option value="Meeting">Meeting</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button class="btn btn-primary w-100 fw-bold" onclick="predictNext()">تحديث التوصيات الذكية</button>
+                        </div>
+                    </div>
+                    
+                    <div id="predictionResult" class="mt-4" style="display:none;">
+                        <hr>
+                        <h6 class="fw-bold text-primary mb-3">أفضل 4 إجراءات مقترحة (بناءً على الذكاء الاصطناعي):</h6>
+                        <div id="actionBadges" class="row row-cols-1 row-cols-md-2 g-3">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header text-primary">🗺️ خريطة الطريق الاستراتيجية</div>
+                <div class="card-body text-center">
+                    <img src="journey_map.png" class="img-viz" alt="Strategic Roadmap" onerror="this.src='https://via.placeholder.com/600x400?text=Journey+Map+Image'">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header text-primary">🧠 تحليل أهمية الميزات (AI Importance)</div>
+                <div class="card-body text-center">
+                    <img src="features_importance.png" class="img-viz" alt="AI Features" onerror="this.src='https://via.placeholder.com/600x400?text=Features+Importance+Image'">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="text-primary">🌍 السجل التاريخي لأفضل المسارات</span>
+                </div>
+                <div class="card-body p-0">
+                    <div id="table-loader" class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">جاري تحميل سجلات JSON...</p>
+                    </div>
+                    <div id="json-table" class="table-responsive" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container small">
+        <p class="mb-1">نظام مبني على تقنيات Python (Pandas & Scikit-Learn) | واجهة تفاعلية</p>
+        <p class="opacity-50">تم التطوير لدعم اتخاذ القرار في المبيعات الاستراتيجية</p>
+    </div>
+</footer>
+
+<script>
+    // 1. وظيفة التنبؤ التفاعلي (NBA)
+   async function predictNext() {
+    // 1. جلب القيم وتحويلها لتنسيق ملفك (مثال: من US إلى Us)
+    let countryRaw = document.getElementById('inputCountry').value.toLowerCase();
+    let country = countryRaw.charAt(0).toUpperCase() + countryRaw.slice(1);
+    
+    let solution = document.getElementById('inputSolution').value; // MRS تبقى كما هي
+    let lastAction = document.getElementById('lastAction').value;
+    
+    const resultDiv = document.getElementById('predictionResult');
+    const badgeContainer = document.getElementById('actionBadges');
+
+    try {
+        const response = await fetch('./top_paths_by_country_solution.json');
+        const data = await response.json();
+        
+        // المفتاح كما هو في ملفك (مثال: Us_MRS)
+        const key = `${country}_${solution}`;
+        let paths = data[key] || [];
+
+        // تنظيف الواجهة قبل العرض
+        badgeContainer.innerHTML = '';
+
+        if (paths.length === 0) {
+            badgeContainer.innerHTML = `<div class="col-12 text-muted">⚠️ لا توجد مسارات ناجحة مسجلة للمفتاح: ${key}</div>`;
+        } else {
+            // تصفية المسارات التي لها Score أكبر من 0 (المسارات الرابحة فعلياً)
+            let validPaths = paths.filter(p => p.score > 0);
+
+            if (validPaths.length === 0) {
+                badgeContainer.innerHTML = `<div class="col-12 text-warning">البيانات موجودة لـ ${key} ولكن لا توجد مسارات حققت "Win" حتى الآن.</div>`;
+            } else {
+                let recs = validPaths.map(p => {
+                    // نأخذ الخطوة الأولى من المسار (مثال: "Inbound Call" من "Inbound Call -> Email")
+                    let action = p.path.split(' -> ')[0]; 
+                    let score = p.score;
+                    
+                    // تطبيق المعادلة إذا كان الإجراء مكرراً
+                    if (action.toLowerCase() === lastAction.toLowerCase()) {
+                        score *= 0.5; 
+                    }
+                    return { action, score };
+                });
+
+                // ترتيب وعرض التوصيات
+                recs.sort((a, b) => b.score - a.score);
+                recs.slice(0, 4).forEach((rec, i) => {
+                    badgeContainer.innerHTML += `
+                        <div class="col">
+                            <div class="p-3 bg-white border rounded shadow-sm recommendation-card d-flex justify-content-between align-items-center mb-2">
+                                <span><strong>${i+1}.</strong> ${rec.action}</span>
+                                <span class="badge bg-primary">${rec.score.toFixed(1)}</span>
+                            </div>
+                        </div>`;
+                });
+            }
+        }
+        resultDiv.style.display = 'block';
+    } catch (e) {
+        badgeContainer.innerHTML = '<div class="col-12 text-danger">❌ تأكد من تشغيل الموقع عبر Server (Live Server) ليتمكن من قراءة ملف JSON.</div>';
+    }
+}//. وظيفة تحميل الجدول التاريخي
+    async function loadStats() {
+        const tableContainer = document.getElementById('json-table');
+        const loader = document.getElementById('table-loader');
+        
+        try {
+            const response = await fetch('./top_paths_by_country.json');
+            if (!response.ok) throw new Error("لم يتم العثور على ملف الـ JSON");
+            
+            const data = await response.json();
+            console.log("البيانات المستلمة:", data); // للفحص في الـ Console
+
+            let html = '<table class="table table-hover mb-0"><thead><tr>';
+            html += '<th>المنطقة</th><th>المسار الأكثر كفاءة</th><th>معدل النجاح</th><th>العينة</th></tr></thead><tbody>';
+            
+            for (let country in data) {
+                // فحص: هل البيانات عبارة عن قائمة أم كائن واحد؟
+                let best;
+                if (Array.isArray(data[country])) {
+                    best = data[country][0]; // إذا كانت قائمة نأخذ أول عنصر
+                } else {
+                    best = data[country]; // إذا كان كائن مباشر
+                }
+
+                // التأكد من أن الخصائص موجودة قبل القراءة لمنع الـ Uncaught TypeError
+                if (best && (best.path || best.Path)) {
+                    const pathText = best.path || best.Path || "غير محدد";
+                    const winRate = best.win_rate || best.Win_Rate || 0;
+                    const count = best.count || best.Count || 0;
+
+                    html += `<tr>
+                        <td class="fw-bold">${country}</td>
+                        <td><code>${pathText}</code></td>
+                        <td class="text-success fw-bold">${winRate.toFixed(1)}%</td>
+                        <td>${count} حساب</td>
+                    </tr>`;
+                }
+            }
+            html += '</tbody></table>';
+            
+            loader.style.display = 'none';
+            tableContainer.innerHTML = html;
+            tableContainer.style.display = 'block';
+
+        } catch (err) {
+            console.error("خطأ في التحميل:", err);
+            loader.innerHTML = `
+                <div class="alert alert-danger m-4">
+                    ⚠️ خطأ في قراءة البيانات: ${err.message}<br>
+                    تأكد أن هيكل ملف JSON صحيح.
+                </div>`;
+        }
+    }
+
+    window.onload = loadStats;
+</script>
+</body>
+</html>
